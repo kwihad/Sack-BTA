@@ -1,11 +1,10 @@
-Sack BTA mod source - revision 1.0.5+8.0.1
+Sack BTA mod source - diagnostic revision 1.0.7+8.0.1
 
-Changes in this revision:
-- Removed the right-click hook from ItemStack.useItemRightClick, which was not reached during the user's in-game test.
-- Added SackItemUseMixin injecting into Item.onUseItem(ItemStack, World, Player). This is the actual BTA item-use callback identified from the target API; Item.onUseItem is final, so it must be intercepted rather than overridden.
-- Logs on item-use entry and before server-side container opening to diagnose whether the callback is reached.
-- Keeps the six-slot ContainerSimple chest-style container, NBT content persistence, 3 leather + 1 string shapeless recipe, creative Drops placement, and the existing tweaked texture.
+Change in this revision:
+- Fixes the diagnostic mixin target that caused the prior startup crash. BTA 8.0.1 is based on Minecraft Beta 1.7.3, whose mouse handling uses Minecraft.clickMouse(int button) for both buttons; button 1 is right-click. The hook now targets clickMouse(I)V and logs only right-clicks.
+- Sack ItemStack diagnostics only log when the selected stack is the Sack, reducing noise.
+- Bumps the mod version to 1.0.7 so the artifact is easy to identify.
 
-Important multiplayer note: for a container to open and synchronize correctly on a multiplayer server, Sack must be installed on both the client and the server. A client-only install can register the Sack locally but cannot run the server-side container-opening code on a remote server.
+This is still a diagnostic build, not a confirmed fix for opening the screen. It retains the previous ItemStack.useItemRightClick and Item.onUseItem checkpoints so the log can identify which path is actually reached.
 
-Build with GitHub Actions. This revision has not been compiled or tested in-game in the current environment.
+Build through GitHub Actions and install only the new sack-1.0.7+8.0.1.jar. Please verify that this new version starts before testing right-click behavior.

@@ -11,22 +11,25 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Diagnostic only. This is the earliest useful client-side checkpoint: the method called when
- * Minecraft processes a right mouse click in-world. It doesn't cancel or otherwise change gameplay.
+ * Diagnostic only. Minecraft Beta 1.7.3 (the base of BTA 8.0.1) handles both mouse buttons
+ * through clickMouse(int button), with button 1 representing right-click. This probe only logs
+ * right-clicks and does not cancel or otherwise change gameplay.
  */
 @Mixin(targets = "net.minecraft.client.Minecraft", remap = false)
 public abstract class SackRightClickDiagnosticMixin {
-    @Inject(method = "rightClickMouse", at = @At("HEAD"), remap = false, require = 1)
-    private void sack$rightClickHead(CallbackInfo ci) {
+    @Inject(method = "clickMouse(I)V", at = @At("HEAD"), remap = false, require = 1)
+    private void sack$rightClickHead(int button, CallbackInfo ci) {
+        if (button != 1) return;
         Object mc = this;
-        SackMod.LOGGER.info("SACK_DIAGNOSTIC: Minecraft.rightClickMouse HEAD; {}", sack$describeHeldStack(mc));
+        SackMod.LOGGER.info("SACK_DIAGNOSTIC: Minecraft.clickMouse(button=1) HEAD; {}", sack$describeHeldStack(mc));
     }
 
-    @Inject(method = "rightClickMouse", at = @At("RETURN"), remap = false, require = 1)
-    private void sack$rightClickReturn(CallbackInfo ci) {
+    @Inject(method = "clickMouse(I)V", at = @At("RETURN"), remap = false, require = 1)
+    private void sack$rightClickReturn(int button, CallbackInfo ci) {
+        if (button != 1) return;
         Object mc = this;
         Object screen = sack$readField(mc, "currentScreen", "screen", "currentGui");
-        SackMod.LOGGER.info("SACK_DIAGNOSTIC: Minecraft.rightClickMouse RETURN; currentScreen={}",
+        SackMod.LOGGER.info("SACK_DIAGNOSTIC: Minecraft.clickMouse(button=1) RETURN; currentScreen={}",
             screen == null ? "none/unresolved" : screen.getClass().getName());
     }
 

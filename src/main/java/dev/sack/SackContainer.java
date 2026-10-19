@@ -19,7 +19,8 @@ public final class SackContainer extends ContainerSimple {
     private boolean loading;
 
     public SackContainer(ItemStack sackStack) {
-        super("container.sack", SLOT_COUNT);
+        // Use BTA's built-in chest container identifier so the vanilla chest-style screen is selected.
+        super("container.chest", SLOT_COUNT);
         this.sackStack = sackStack;
         loadFromStack();
     }

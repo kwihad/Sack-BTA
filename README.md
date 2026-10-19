@@ -54,3 +54,8 @@ The source is based on the BTA 8.0.1 project scaffold and inventory conventions 
 ## Runtime fix after first test
 
 If the game crashes during mixin application with `non-static callback method ... targets a static method` for `ItemStack.copyItemStack`, use the updated `SackItemStackMixin` from this source revision. The callback for this static method must itself be static.
+
+
+## Runtime GUI fix (testing revision)
+
+The interaction hook no longer cancels the client-side `ItemStack.useItemRightClick` call. It waits for the logical server to open the container, and the container uses BTA's standard `container.chest` identifier to select the built-in chest-style UI. A server-side log entry is emitted when the hook opens the sack. This revision requires a GitHub Actions build and in-game testing; it has not been compiled in this disconnected environment.

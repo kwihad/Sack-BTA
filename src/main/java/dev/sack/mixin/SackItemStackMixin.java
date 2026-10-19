@@ -57,9 +57,13 @@ public abstract class SackItemStackMixin implements SackStackData {
         ItemStack self = (ItemStack) (Object) this;
         if (self.itemID != SackItems.SACK.id) return;
 
-        if (!world.isClientSide) {
-            player.displayContainerScreen(new SackContainer(self));
-        }
+        // Do not cancel the client-side use call. In BTA, cancelling the local ItemStack
+        // callback can prevent the normal item-use request from reaching the logical server,
+        // where displayContainerScreen must be opened and synchronized.
+        if (world.isClientSide) return;
+
+        SackMod.LOGGER.info("Opening sack inventory on the server.");
+        player.displayContainerScreen(new SackContainer(self));
         cir.setReturnValue(self);
     }
 

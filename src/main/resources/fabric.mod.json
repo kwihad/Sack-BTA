@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "sack",
+  "version": "${version}",
+  "name": "Sack",
+  "description": "A compact six-slot portable inventory for Better Than Adventure!",
+  "authors": ["Sack Mod"],
+  "license": "CC0-1.0",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.sack.SackMod"],
+    "client": ["dev.sack.SackClient"]
+  },
+  "depends": {
+    "fabricloader": ">=${fabricloader}",
+    "minecraft": "*",
+    "java": ">=${java}",
+    "halplibe": ">=${halplibe}"
+  },
+  "suggests": {
+    "modmenu": ">=${modmenu}"
+  }
+}

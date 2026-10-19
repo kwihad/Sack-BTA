@@ -1,0 +1,41 @@
+name: Build Sack Mod
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Compile BTA mod
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install Java toolchains
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            17
+            21
+          cache: gradle
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build mod
+        run: |
+          chmod +x ./gradlew
+          ./gradlew build --no-daemon --stacktrace
+
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: sack-mod-jar
+          path: build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 14

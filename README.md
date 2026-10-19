@@ -1,0 +1,49 @@
+# Sack — BTA 8.0.1
+
+A small portable-storage mod for Better Than Adventure! BTA 8.0.1 / Babric.
+
+## Intended behavior
+
+- Adds a non-stackable item named **Sack**.
+- Right-clicking the held sack opens a chest-style inventory screen.
+- Stores six inventory slots, with a maximum of 16 items per slot.
+- Stores contents in the individual sack ItemStack's NBT, so different sacks have independent inventories and contents survive world saves, drops, and pickups.
+- Prevents putting a Sack item inside another Sack.
+- Adds a shapeless recipe using four leather and two string.
+
+## Target versions
+
+- BTA: `8.0.1`
+- Fabric Loader / Babric: `0.18.4-bta.11`
+- HalpLibe: `6.1.3+8.0` (the version declared in the matching source project)
+- Java bytecode target: Java 17
+
+The Gradle wrapper is the one from the supplied Mo' Creatures BTA 8.0.1 source project. Its Gradle daemon/toolchain setup may use JDK 21 even though the mod is compiled for Java 17 and runs with Java 17. Set IntelliJ's **Gradle JVM** to JDK 21 if your Gradle version requires it; set the game/runtime Java to the version required by your BTA instance.
+
+## Build
+
+On a machine with network access and the required JDK/toolchain installed:
+
+```bash
+./gradlew build
+```
+
+On Windows:
+
+```bat
+gradlew.bat build
+```
+
+The mod JAR should be written to `build/libs/`.
+
+## Build on GitHub Actions (online runner)
+
+The `.github/workflows/build.yml` workflow runs `./gradlew build` on GitHub's hosted runner whenever code is pushed, and can also be started manually from the repository's **Actions** tab using **Build Sack Mod → Run workflow**. If the build succeeds, download the `sack-mod-jar` artifact from that workflow run. This uses GitHub's networked build environment; it does not imply the project has already compiled successfully.
+
+## Install
+
+Copy the resulting `sack-1.0.0+8.0.1.jar` into the `mods` directory for your BTA 8.0.1 Babric instance.
+
+## Implementation notes
+
+The source is based on the relevant BTA 8.0.1 project scaffold and inventory conventions from the supplied Mo' Creatures repository, not on newer Minecraft inventory APIs. The build could not be run in the disconnected build environment used to prepare this source archive: the Gradle wrapper failed while resolving `services.gradle.org`. As a result, the source is packaged but **not yet verified by a successful compilation or in-game test**. Check the first Gradle compiler error, if any, against your local mappings and report it to continue refining compatibility.

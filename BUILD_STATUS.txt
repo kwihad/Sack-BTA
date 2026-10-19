@@ -1,3 +1,10 @@
-Build status
+Sack BTA mod source - revision 1.0.1+8.0.1
 
-The last GitHub Actions build showed that the target BTA CompoundTag API has no copy() method. This revision replaces those calls with a helper that clones the SackItems list by reading and writing each contained ItemStack. The crafting recipe is three leather and one string, and the item is explicitly placed in BTA's Drops creative category. This revision has not yet been verified by a successful GitHub Actions build or in-game launch.
+Changes in this revision:
+- Right-click logic moved to SackItem.onItemRightClick (server opens SackContainer).
+- Added callback diagnostics for both logical sides.
+- Slightly tweaked 16x16 item texture (highlighted tie and small stitched fold).
+- Bumped mod_version to 1.0.1 for easy artifact identification.
+- Keeps 3 leather + 1 string shapeless recipe and Drops creative category.
+
+Build status: source not compiled locally in this environment; use GitHub Actions and test in-game.

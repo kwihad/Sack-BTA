@@ -2,16 +2,12 @@ package dev.sack.mixin;
 
 import com.mojang.nbt.tags.CompoundTag;
 import com.mojang.nbt.tags.ListTag;
-import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
-import net.minecraft.core.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import dev.sack.SackContainer;
-import dev.sack.SackMod;
 import dev.sack.SackItems;
 import dev.sack.SackStackData;
 
@@ -53,20 +49,8 @@ public abstract class SackItemStackMixin implements SackStackData {
         }
     }
 
-    @Inject(method = "useItemRightClick", at = @At("HEAD"), cancellable = true, remap = false)
-    private void sack$openScreen(World world, Player player, CallbackInfoReturnable<ItemStack> cir) {
-        ItemStack self = (ItemStack) (Object) this;
-        if (self.itemID != SackItems.SACK.id) return;
-
-        // Do not cancel the client-side use call. In BTA, cancelling the local ItemStack
-        // callback can prevent the normal item-use request from reaching the logical server,
-        // where displayContainerScreen must be opened and synchronized.
-        if (world.isClientSide) return;
-
-        SackMod.LOGGER.info("Opening sack inventory on the server.");
-        player.displayContainerScreen(new SackContainer(self));
-        cir.setReturnValue(self);
-    }
+    // Item interaction is implemented in SackItem.onItemRightClick. This mixin only keeps the
+    // sack's extra NBT attached to the ItemStack across serialization and copies.
 
     @Inject(method = "copy", at = @At("RETURN"), remap = false, require = 0)
     private void sack$copyExtraData(CallbackInfoReturnable<ItemStack> cir) {

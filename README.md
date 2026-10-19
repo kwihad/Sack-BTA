@@ -59,3 +59,14 @@ If the game crashes during mixin application with `non-static callback method ..
 ## Runtime GUI fix (testing revision)
 
 The interaction hook no longer cancels the client-side `ItemStack.useItemRightClick` call. It waits for the logical server to open the container, and the container uses BTA's standard `container.chest` identifier to select the built-in chest-style UI. A server-side log entry is emitted when the hook opens the sack. This revision requires a GitHub Actions build and in-game testing; it has not been compiled in this disconnected environment.
+
+
+## Update 1.0.1
+
+- Moves the sack's right-click behavior into `SackItem.onItemRightClick`, the BTA item-use callback.
+- Emits client/server diagnostic log messages when the callback fires.
+- Keeps persistent per-sack inventory NBT handling in the ItemStack mixin.
+- Refines the 16x16 leather sack texture with a small highlighted tie and stitched fold.
+- The shapeless recipe remains 3 leather + 1 string; the Sack remains in the Drops creative category.
+
+Build with the project's GitHub Actions workflow. This revision has not been confirmed in-game yet.

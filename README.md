@@ -47,3 +47,8 @@ Copy the resulting `sack-1.0.0+8.0.1.jar` into the `mods` directory for your BTA
 ## Implementation notes
 
 The source is based on the BTA 8.0.1 project scaffold and inventory conventions from the supplied Mo' Creatures repository. This revision addresses the API mismatches from the first GitHub Actions compiler log by avoiding old ItemStack tag accessor methods and the unsupported ContainerSimple.canPlaceItem override. The right-click hook and serialization Mixin must still be verified against BTA 8.0.1 at runtime. The build could not be run in the disconnected build environment used to prepare this source archive: the Gradle wrapper failed while resolving `services.gradle.org`. As a result, the source is packaged but **not yet verified by a successful compilation or in-game test**. Check the first Gradle compiler error, if any, against your local mappings and report it to continue refining compatibility.
+
+
+## Runtime fix after first test
+
+If the game crashes during mixin application with `non-static callback method ... targets a static method` for `ItemStack.copyItemStack`, use the updated `SackItemStackMixin` from this source revision. The callback for this static method must itself be static.

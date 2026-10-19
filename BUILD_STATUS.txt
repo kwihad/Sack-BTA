@@ -1,3 +1,3 @@
-Build status: NOT VERIFIED
+Build status
 
-Revision 2 addresses the five reported Java compiler errors: the invalid ContainerSimple.canPlaceItem override was removed, ItemStack NBT access now goes through a small Mixin-backed payload, and right-click handling is intercepted through ItemStack.useItemRightClick rather than a legacy Item callback. The changes have not been compiled in this environment because external network access is unavailable. Run the GitHub Actions build again; if compilation succeeds, perform an in-game persistence and right-click test.
+The previous in-game launch failed because SackItemStackMixin injected a non-static handler into the static ItemStack.copyItemStack method. The handler has now been changed to static and uses the source ItemStack argument to copy its custom NBT payload. This revision has not yet been verified in a fresh build or game launch.

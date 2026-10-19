@@ -64,15 +64,23 @@ public abstract class SackItemStackMixin implements SackStackData {
     private void sack$copyExtraData(CallbackInfoReturnable<ItemStack> cir) {
         ItemStack copy = cir.getReturnValue();
         if (copy != null && sack$extraData != null) {
-            ((SackStackData) (Object) copy).sack$setExtraData(sack$extraData);
+            ((SackStackData) (Object) copy).sack$setExtraData(sack$extraData.copy());
         }
     }
 
     @Inject(method = "copyItemStack", at = @At("RETURN"), remap = false, require = 0)
-    private void sack$copyExtraDataLegacy(CallbackInfoReturnable<ItemStack> cir) {
+    private static void sack$copyExtraDataLegacy(ItemStack original, CallbackInfoReturnable<ItemStack> cir) {
+        // ItemStack.copyItemStack is static in BTA 8.0.1, so its injection callback must be static too.
+        // The normal instance copy() hook handles most copies; this covers callers of the static helper.
+        if (original == null || original.itemID != SackItems.SACK.id) return;
+
         ItemStack copy = cir.getReturnValue();
-        if (copy != null && sack$extraData != null) {
-            ((SackStackData) (Object) copy).sack$setExtraData(sack$extraData);
+        if (copy == null) return;
+
+        CompoundTag originalData = ((SackStackData) (Object) original).sack$getExtraData();
+        if (originalData != null) {
+            // Do not share the same mutable NBT object between two sack stacks.
+            ((SackStackData) (Object) copy).sack$setExtraData(originalData.copy());
         }
     }
 }

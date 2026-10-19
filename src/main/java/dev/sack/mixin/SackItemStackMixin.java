@@ -1,6 +1,7 @@
 package dev.sack.mixin;
 
 import com.mojang.nbt.tags.CompoundTag;
+import com.mojang.nbt.tags.ListTag;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.world.World;
@@ -21,6 +22,8 @@ import dev.sack.SackStackData;
 @Mixin(value = ItemStack.class, remap = false)
 public abstract class SackItemStackMixin implements SackStackData {
     @Unique private static final String SACK_DATA_KEY = "SackModData";
+    @Unique private static final String SACK_ITEMS_KEY = "SackItems";
+    @Unique private static final String SACK_SLOT_KEY = "Slot";
     @Unique private CompoundTag sack$extraData;
 
     @Override
@@ -64,7 +67,7 @@ public abstract class SackItemStackMixin implements SackStackData {
     private void sack$copyExtraData(CallbackInfoReturnable<ItemStack> cir) {
         ItemStack copy = cir.getReturnValue();
         if (copy != null && sack$extraData != null) {
-            ((SackStackData) (Object) copy).sack$setExtraData(sack$extraData.copy());
+            ((SackStackData) (Object) copy).sack$setExtraData(sack$copyExtraData(sack$extraData));
         }
     }
 
@@ -80,7 +83,38 @@ public abstract class SackItemStackMixin implements SackStackData {
         CompoundTag originalData = ((SackStackData) (Object) original).sack$getExtraData();
         if (originalData != null) {
             // Do not share the same mutable NBT object between two sack stacks.
-            ((SackStackData) (Object) copy).sack$setExtraData(originalData.copy());
+            ((SackStackData) (Object) copy).sack$setExtraData(sack$copyExtraData(originalData));
         }
+    }
+
+
+    /**
+     * Deep-copies this mod's payload without relying on CompoundTag.copy(), which is not available
+     * in the BTA 8.0.1 NBT API. Each saved item is round-tripped through ItemStack's NBT methods.
+     */
+    @Unique
+    private static CompoundTag sack$copyExtraData(CompoundTag source) {
+        if (source == null) return null;
+
+        CompoundTag result = new CompoundTag();
+        if (!source.containsKey(SACK_ITEMS_KEY)) return result;
+
+        ListTag sourceItems = source.getList(SACK_ITEMS_KEY);
+        ListTag copiedItems = new ListTag();
+        for (int i = 0; i < sourceItems.tagCount(); i++) {
+            Object rawEntry = sourceItems.tagAt(i);
+            if (!(rawEntry instanceof CompoundTag)) continue;
+
+            CompoundTag entry = (CompoundTag) rawEntry;
+            ItemStack stored = ItemStack.readItemStackFromNbt(entry);
+            if (stored == null || stored.stackSize <= 0) continue;
+
+            CompoundTag copiedEntry = new CompoundTag();
+            copiedEntry.putByte(SACK_SLOT_KEY, entry.getByte(SACK_SLOT_KEY));
+            stored.writeToNBT(copiedEntry);
+            copiedItems.addTag(copiedEntry);
+        }
+        result.put(SACK_ITEMS_KEY, copiedItems);
+        return result;
     }
 }

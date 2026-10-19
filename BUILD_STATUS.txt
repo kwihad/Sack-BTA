@@ -1,3 +1,3 @@
 Build status
 
-The previous in-game launch failed because SackItemStackMixin injected a non-static handler into the static ItemStack.copyItemStack method. The handler has now been changed to static and uses the source ItemStack argument to copy its custom NBT payload. This revision has not yet been verified in a fresh build or game launch.
+The last GitHub Actions build showed that the target BTA CompoundTag API has no copy() method. This revision replaces those calls with a helper that clones the SackItems list by reading and writing each contained ItemStack. The crafting recipe is three leather and one string, and the item is explicitly placed in BTA's Drops creative category. This revision has not yet been verified by a successful GitHub Actions build or in-game launch.

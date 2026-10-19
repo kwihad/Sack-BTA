@@ -12,8 +12,6 @@ public final class SackRecipes {
             .addInput(Items.LEATHER)
             .addInput(Items.LEATHER)
             .addInput(Items.LEATHER)
-            .addInput(Items.LEATHER)
-            .addInput(Items.STRING)
             .addInput(Items.STRING)
             .create("sack", SackItems.SACK.getDefaultStack());
     }

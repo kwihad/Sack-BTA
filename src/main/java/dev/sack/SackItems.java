@@ -10,6 +10,9 @@ public final class SackItems {
     private SackItems() {}
 
     private static final int SACK_ITEM_ID = 18000;
+
+    // Register the Sack in BTA's creative inventory under Drops, following the same
+    // HalpLibe placement API used by Mo' Creatures BTA 8.0.1.
     private static final ItemBuilder SACK_BUILDER = new ItemBuilder(SackMod.MOD_ID)
         .setCreativeInventoryPlacement(
             new CreativeInventoryPlacement.Category(CreativeInventoryCategory.DROPS)

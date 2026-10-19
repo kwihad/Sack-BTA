@@ -70,3 +70,8 @@ The interaction hook no longer cancels the client-side `ItemStack.useItemRightCl
 - The shapeless recipe is 3 leather + 1 string; the Sack remains in the Drops creative category.
 
 Build with the project's GitHub Actions workflow. Compilation and in-game GUI behavior must still be verified.
+
+
+## Interaction fix in 1.0.4
+
+Right-click opening is now injected at `ItemStack.useItemRightClick`, the Beta-era held-item-use path, rather than `Item.onUseItem`. The prior runtime log showed the item-level hook did not run during the user's test. The new hook emits a diagnostic log line and invokes `Player.displayContainerScreen(new SackContainer(stack))` on the logical server. This revision has not been in-game verified; confirm in GitHub Actions and test the interaction in BTA 8.0.1.

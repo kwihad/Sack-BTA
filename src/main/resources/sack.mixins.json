@@ -5,9 +5,13 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "SackItemStackMixin",
-    "SackItemUseMixin"
+    "SackItemUseMixin",
+    "SackItemStackRightClickDiagnosticMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "SackRightClickDiagnosticMixin"
+  ]
 }

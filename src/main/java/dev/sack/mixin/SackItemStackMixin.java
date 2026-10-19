@@ -3,16 +3,12 @@ package dev.sack.mixin;
 import com.mojang.nbt.tags.CompoundTag;
 import com.mojang.nbt.tags.ListTag;
 import net.minecraft.core.item.ItemStack;
-import net.minecraft.core.entity.player.Player;
-import net.minecraft.core.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import dev.sack.SackItems;
-import dev.sack.SackContainer;
-import dev.sack.SackMod;
 import dev.sack.SackStackData;
 
 /**
@@ -51,25 +47,6 @@ public abstract class SackItemStackMixin implements SackStackData {
         if (stack != null && stack.itemID == SackItems.SACK.id && tag.containsKey(SACK_DATA_KEY)) {
             ((SackStackData) (Object) stack).sack$setExtraData(tag.getCompound(SACK_DATA_KEY));
         }
-    }
-
-    /**
-     * In the BTA 8.0.1 / Beta-era item-use path, right-clicking an item in the hand enters
-     * ItemStack.useItemRightClick. The previous revision hooked Item.onUseItem, which the
-     * supplied runtime log shows was never reached by this interaction. Open the inventory
-     * on the logical server, where displayContainerScreen performs the normal synchronization.
-     */
-    @Inject(method = "useItemRightClick", at = @At("HEAD"), cancellable = true, remap = false)
-    private void sack$openScreenOnRightClick(World world, Player player, CallbackInfoReturnable<ItemStack> cir) {
-        ItemStack self = (ItemStack) (Object) this;
-        if (self.itemID != SackItems.SACK.id) return;
-
-        SackMod.LOGGER.info("Sack right-click reached ItemStack.useItemRightClick (clientSide={})", world.isClientSide);
-        if (world.isClientSide) return;
-
-        SackMod.LOGGER.info("Opening six-slot Sack inventory on the logical server.");
-        player.displayContainerScreen(new SackContainer(self));
-        cir.setReturnValue(self);
     }
 
     @Inject(method = "copy", at = @At("RETURN"), remap = false, require = 0)

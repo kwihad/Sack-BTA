@@ -4,7 +4,8 @@
   "package": "dev.sack.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "SackItemStackMixin"
+    "SackItemStackMixin",
+    "SackItemUseMixin"
   ],
   "injectors": {
     "defaultRequire": 1

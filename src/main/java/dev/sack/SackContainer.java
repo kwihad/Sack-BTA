@@ -30,17 +30,11 @@ public final class SackContainer extends ContainerSimple {
     }
 
     @Override
-    public boolean canPlaceItem(int slot, ItemStack stack) {
-        // Do not allow a sack inside itself or inside another sack.
-        return slot >= 0 && slot < SLOT_COUNT
-            && (stack == null || stack.itemID != SackItems.SACK.id);
-    }
-
-    @Override
     public void setItem(int slot, ItemStack stack) {
         if (slot < 0 || slot >= SLOT_COUNT) return;
-        // The GUI asks canPlaceItem before inserting. Keep this guard too, for other callers.
+        // BTA 8's ContainerSimple does not expose canPlaceItem; guard the actual write instead.
         if (stack != null && stack.itemID == SackItems.SACK.id) return;
+        if (stack != null && stack.stackSize > SLOT_STACK_LIMIT) stack.stackSize = SLOT_STACK_LIMIT;
         super.setItem(slot, stack);
         saveToStack();
     }
@@ -61,7 +55,7 @@ public final class SackContainer extends ContainerSimple {
     private void loadFromStack() {
         loading = true;
         try {
-            CompoundTag itemTag = sackStack.getTagCompound();
+            CompoundTag itemTag = ((SackStackData) (Object) sackStack).sack$getExtraData();
             if (itemTag == null || !itemTag.containsKey(DATA_KEY)) return;
 
             ListTag items = itemTag.getList(DATA_KEY);
@@ -85,11 +79,9 @@ public final class SackContainer extends ContainerSimple {
     private void saveToStack() {
         if (loading || sackStack == null) return;
 
-        CompoundTag itemTag = sackStack.getTagCompound();
-        if (itemTag == null) {
-            itemTag = new CompoundTag();
-            sackStack.setTagCompound(itemTag);
-        }
+        SackStackData stackData = (SackStackData) (Object) sackStack;
+        CompoundTag itemTag = stackData.sack$getExtraData();
+        if (itemTag == null) itemTag = new CompoundTag();
 
         ListTag items = new ListTag();
         for (int slot = 0; slot < SLOT_COUNT; slot++) {
@@ -105,5 +97,6 @@ public final class SackContainer extends ContainerSimple {
             items.addTag(entry);
         }
         itemTag.put(DATA_KEY, items);
+        stackData.sack$setExtraData(itemTag);
     }
 }

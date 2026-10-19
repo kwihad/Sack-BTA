@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.sack.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "SackItemStackMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

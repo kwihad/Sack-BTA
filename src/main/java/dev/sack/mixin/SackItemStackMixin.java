@@ -49,7 +49,7 @@ public abstract class SackItemStackMixin implements SackStackData {
         }
     }
 
-    // Item interaction is implemented in SackItem.onItemRightClick. This mixin only keeps the
+    // Item interaction is implemented in SackItem.onUseItem. This mixin only keeps the
     // sack's extra NBT attached to the ItemStack across serialization and copies.
 
     @Inject(method = "copy", at = @At("RETURN"), remap = false, require = 0)

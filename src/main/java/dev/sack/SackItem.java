@@ -14,12 +14,12 @@ public final class SackItem extends Item {
     }
 
     /**
-     * BTA routes held-item right clicks through Item.onItemRightClick. Open the container
-     * on the logical server, matching the supported pattern used by BTA's own container users.
+     * BTA 8.0.1 routes use-in-air interactions through Item.onUseItem.
+     * Open the container on the logical server, following BTA's portable-container pattern.
      */
     @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, Player player) {
-        SackMod.LOGGER.info("Sack right-click callback fired (clientSide={})", world.isClientSide);
+    public ItemStack onUseItem(ItemStack stack, World world, Player player) {
+        SackMod.LOGGER.info("Sack onUseItem callback fired (clientSide={})", world.isClientSide);
         if (!world.isClientSide) {
             SackMod.LOGGER.info("Opening sack inventory on the server.");
             player.displayContainerScreen(new SackContainer(stack));

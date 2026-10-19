@@ -1,10 +1,9 @@
-Sack BTA mod source - revision 1.0.1+8.0.1
+Sack BTA mod source - revision 1.0.2+8.0.1
 
-Changes in this revision:
-- Right-click logic moved to SackItem.onItemRightClick (server opens SackContainer).
-- Added callback diagnostics for both logical sides.
-- Slightly tweaked 16x16 item texture (highlighted tie and small stitched fold).
-- Bumped mod_version to 1.0.1 for easy artifact identification.
-- Keeps 3 leather + 1 string shapeless recipe and Drops creative category.
+This source revision fixes the incorrect item interaction callback name:
+- Uses Item.onUseItem(ItemStack, World, Player), the callback documented for BTA's item use interaction.
+- Keeps server-side opening of SackContainer and includes diagnostic logs for client/server callback execution.
+- Keeps the slightly updated 16x16 sack texture introduced in revision 1.0.1.
+- Keeps 3 leather + 1 string shapeless recipe and creative inventory registration under Drops.
 
-Build status: source not compiled locally in this environment; use GitHub Actions and test in-game.
+The project has not been compiled or tested in-game in this environment because Gradle could not resolve services.gradle.org. Use GitHub Actions to verify compilation before installing the resulting JAR.
